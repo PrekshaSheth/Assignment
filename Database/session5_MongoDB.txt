@@ -1,0 +1,357 @@
+
+****** view databases ******
+> show dbs;
+Demo    0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+
+****** create database or use database  ******
+> db
+test
+
+******  view current database ******
+> use DB
+switched to db DB
+
+****** delete database ******
+> use Demo
+switched to db Demo
+> db.dropDatabase()
+{ "ok" : 1 }
+
+****** create collection  ******
+
+> db.createCollection('students')
+{ "ok" : 1 }
+> db.createCollection('temp')
+{ "ok" : 1 }
+
+****** show collection  ******
+
+> show collections
+students
+temp
+ 
+****** drop collection ******
+
+> db.temp.drop()
+true
+
+****** insert rows ******
+
+ db.students.insert({
+     'name': 'Preksha',
+     'course':'MCA' 
+ })
+ WriteResult({ "nInserted" : 1 })
+
+db.students.insert({
+     'name': 'Mahi',
+     'course':'MscIT',
+     'sem':5
+ })
+ WriteResult({ "nInserted" : 1 })
+
+ ****** insert multiple rows  ******
+
+    db.students.insertMany([{
+        'name':'Prerak',
+        'course': 'MSC'
+    },
+    {
+        'name':'rutwik',
+        'course': 'MCA'  
+    },
+    {
+        'name':'kunjal',
+        'course': 'Mtech'  
+    },
+    {
+        'name':'Archi',
+        'course': 'MSC'  
+    }])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("61e678023788347f84961d32"),
+                ObjectId("61e678023788347f84961d33"),
+                ObjectId("61e678023788347f84961d34"),
+                ObjectId("61e678023788347f84961d35")
+        ]
+}
+
+******  show rows  ******
+
+> db.students.find()
+
+{ "_id" : ObjectId("61e677d53788347f84961d31"), "name" : "Preksha", "course" : "MCA" }
+{ "_id" : ObjectId("61e678023788347f84961d32"), "name" : "Prerak", "course" : "MSC" }
+{ "_id" : ObjectId("61e678023788347f84961d33"), "name" : "rutwik", "course" : "MCA" }
+{ "_id" : ObjectId("61e678023788347f84961d34"), "name" : "kunjal", "course" : "Mtech" }
+{ "_id" : ObjectId("61e678023788347f84961d35"), "name" : "Archi", "course" : "MSC" }
+
+
+or
+// pretified
+
+> db.students.find().pretty()
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d32"),
+        "name" : "Prerak",
+        "course" : "MSC"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d33"),
+        "name" : "rutwik",
+        "course" : "MCA"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d34"),
+        "name" : "kunjal",
+        "course" : "Mtech"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d35"),
+        "name" : "Archi",
+        "course" : "MSC"
+}
+{
+        "_id" : ObjectId("61e679d83788347f84961d36"),
+        "name" : "Mahi",
+        "course" : "MscIT",
+        "sem" : 5
+}
+>
+******  show rows with limit  ******
+
+> db.students.find().pretty().limit(3)
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d32"),
+        "name" : "Prerak",
+        "course" : "MSC"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d33"),
+        "name" : "rutwik",
+        "course" : "MCA"
+}
+
+******  search operations : ******
+
+> db.students.find({course:'MCA'})
+{ "_id" : ObjectId("61e677d53788347f84961d31"), "name" : "Preksha", "course" : "MCA" }
+{ "_id" : ObjectId("61e678023788347f84961d33"), "name" : "rutwik", "course" : "MCA" }
+
+
+> db.students.find({course:'MscIT',sem:5})
+{ "_id" : ObjectId("61e679d83788347f84961d36"), "name" : "Mahi", "course" : "MscIT", "sem" : 5 }
+
+
+> db.students.find({name: 'Prerak', course:'MSC'})
+{ "_id" : ObjectId("61e678023788347f84961d32"), "name" : "Prerak", "course" : "MSC" }
+
+******  count number of rows in collenction  ******
+
+> db.students.find().count()
+6
+
+> db.students.find({course:'MSC'}).count()
+2
+
+******  sorting  ******
+//****** based on name ******
+> db.students.find().sort({name:1}).pretty()
+{
+        "_id" : ObjectId("61e678023788347f84961d35"),
+        "name" : "Archi",
+        "course" : "MSC"
+}
+{
+        "_id" : ObjectId("61e679d83788347f84961d36"),
+        "name" : "Mahi",
+        "course" : "MscIT",
+        "sem" : 5
+}
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d32"),
+        "name" : "Prerak",
+        "course" : "MSC"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d34"),
+        "name" : "kunjal",
+        "course" : "Mtech"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d33"),
+        "name" : "rutwik",
+        "course" : "MCA"
+}
+
+******//desc ******
+
+> db.students.find().sort({name:-1}).pretty().limit(3)
+{
+        "_id" : ObjectId("61e678023788347f84961d33"),
+        "name" : "rutwik",
+        "course" : "MCA"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d34"),
+        "name" : "kunjal",
+        "course" : "Mtech"
+}
+{
+        "_id" : ObjectId("61e678023788347f84961d32"),
+        "name" : "Prerak",
+        "course" : "MSC"
+}
+>
+
+****** find the 1st row match the ObjectId ******
+
+> db.students.findOne({course:'MSC'})
+{
+        "_id" : ObjectId("61e678023788347f84961d32"),
+        "name" : "Prerak",
+        "course" : "MSC"
+}
+
+****** update rows ******
+
+db.students.update({name:'Preksha'},
+{
+ 'name': 'Preksha',
+  'course':'MCA',
+  'sem':5     
+})
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+> db.students.find({name:'Preksha'}).pretty()
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA",
+        "sem" : 5
+}
+
+******// insert row if not Matched ******
+
+db.students.update({name:'Zoya'},
+{
+ 'name': 'Preksha',
+  'course':'MCA',
+  'sem':5     
+},{upsert:true})
+
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("61e682a6c5d6db5d437569e4")
+})
+
+****** update operators ******
+
+******// increment operator ******
+
+db.students.update({name: 'Preksha'},
+{
+    $inc:{
+        sem: 1
+    }
+})
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+> db.students.find({name:'Preksha'}).pretty()
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA",
+        "sem" : 6
+}
+
+******// rename ******
+
+db.students.update({name: 'Preksha'},
+{ $rename:{
+        5: 'semester'
+}})
+
+{
+        "_id" : ObjectId("61e677d53788347f84961d31"),
+        "name" : "Preksha",
+        "course" : "MCA",
+        "semester" : 6
+}
+
+****** delete row ******
+
+> db.students.remove({name : 'Preksha'})
+WriteResult({ "nRemoved" : 2 })
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+-->db.createCollection('product')
+-->db.product.insert({
+     'name': 'Samsung s9',
+     'price':'20000' 
+ })
+
+ db.product.insertMany([{
+     'name': 'Samsung s9',
+     'price':20000
+ },
+    
+     {
+     'name': 'vivo v9',
+     'price':30000 
+ },
+ 
+ {
+     'name': 'iphone 13',
+     'price':75000 
+ },
+
+ {
+     'name': 'oppo',
+     'price':25000 
+ },
+
+ {
+     'name': 'one plus',
+     'price':52000 
+ },
+ {
+     'name': 'Mi note 9pr',
+     'price':15000
+ }])
+
+
+ --> db.product.find().pretty()
+
+  *****less than , greater than ***** 
+
+ -->db.product.find({price: {$lt:25000}}).pretty()
+ -->db.product.find({price: {$gt:25000}}).pretty()
+ -->
+
