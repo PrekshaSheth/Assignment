@@ -358,5 +358,17 @@ WriteResult({ "nRemoved" : 2 })
 
  -->db.product.find({price: {$lt:25000}}).pretty()
  -->db.product.find({price: {$gt:25000}}).pretty()
- -->
+ 
 
+   ***** create index *****
+
+ db.students.createIndex({name:'text'})
+
+
+  ***** search rows by index *****
+
+db.students.find({
+$text:{
+	$search: "\"P\""
+}
+})
