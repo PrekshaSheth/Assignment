@@ -72,3 +72,24 @@ grant select,delete,update on students to Preksha;
 revoke delete on students from  Preksha;
 
 
+-- Error handling in stored procedure
+
+delimiter $
+create procedure insertSale(IN insale_id int, IN incust_id int, IN inorder_id int, OUT cnt int)
+begin
+DECLARE EXIT HANDLER FOR 1062
+    BEGIN
+ 	SELECT CONCAT('Duplicate key (',insale_id,',',incust_id,',',inorder_id,') occurred') AS message;
+    END;
+    
+    INSERT INTO sale(sale_id,cust_id,order_id)
+    VALUES(insale_id,incust_id,inorder_id);
+    
+    SELECT COUNT(*) into cnt
+    FROM sale
+    WHERE sale_id = insale_id;
+end $
+
+call insertSale(1,2,2,@sale_count)$
+
+select @sale_count$
