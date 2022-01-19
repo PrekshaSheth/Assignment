@@ -270,6 +270,11 @@ WriteResult({
 
 ****** update operators ******
 
+******// set operator ******
+
+> db.product.updateMany({},{$set:{val: 5}})
+{ "acknowledged" : true, "matchedCount" : 6, "modifiedCount" : 6 }
+
 ******// increment operator ******
 
 db.students.update({name: 'Preksha'},
